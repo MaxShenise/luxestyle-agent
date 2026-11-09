@@ -151,7 +151,7 @@ def call_llm(messages: list, provider: str, model_name: str) -> str:
         res = ollama.chat(
             model=model_name,
             messages=ollama_msgs,
-            options={"temperature": 0.1, "num_predict": 600, "stop": ["Observation:"]}
+            options={"temperature": 0.1, "num_predict": 1000, "stop": ["Observation:"]}
         )
         return res["message"]["content"].strip()
     else:
@@ -162,7 +162,8 @@ def call_llm(messages: list, provider: str, model_name: str) -> str:
             contents=messages,
             config=types.GenerateContentConfig(
                 temperature=0.1,
-                max_output_tokens=600,
+                max_output_tokens=2048,
+                thinking_config=types.ThinkingConfig(thinking_budget=0),
                 stop_sequences=["Observation:"]
             )
         )

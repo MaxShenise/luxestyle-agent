@@ -93,7 +93,7 @@ def llm_step(messages):
         res = client.models.generate_content(
             model=GEMINI_MODEL,
             contents=messages,
-            config=types.GenerateContentConfig(temperature=0.2, max_output_tokens=500, stop_sequences=["Observation:"])
+            config=types.GenerateContentConfig(temperature=0.2, max_output_tokens=2048, stop_sequences=["Observation:"])
         )
         return (res.text or "").strip()
 
