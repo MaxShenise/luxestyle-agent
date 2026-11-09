@@ -142,7 +142,7 @@ Answer: [Your final response including exact item names, IDs, prices, total cost
 
 
 def call_llm(messages: list, provider: str, model_name: str) -> str:
-    """Calls either Gemini API or Local Ollama with strict token caps."""
+    """Calls either Gemini API or Local Ollama with higher token limits."""
     if provider == "Ollama (Local)" and OLLAMA_AVAILABLE:
         ollama_msgs = []
         for m in messages:
@@ -156,14 +156,13 @@ def call_llm(messages: list, provider: str, model_name: str) -> str:
         return res["message"]["content"].strip()
     else:
         api_key = os.environ.get("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY", None)
-        client = genai.Client(api_key=api_key)
+        client = genai.Client(api_key=api_key.strip())
         res = client.models.generate_content(
             model=model_name,
             contents=messages,
             config=types.GenerateContentConfig(
                 temperature=0.1,
                 max_output_tokens=2048,
-                thinking_config=types.ThinkingConfig(thinking_budget=0),
                 stop_sequences=["Observation:"]
             )
         )
